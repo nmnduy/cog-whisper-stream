@@ -1,5 +1,5 @@
 from typing import Dict
-from cog import BasePredictor, Input, Path
+from cog import BasePredictor, ConcatenateIterator, Input, Path
 
 
 class Predictor(BasePredictor):
