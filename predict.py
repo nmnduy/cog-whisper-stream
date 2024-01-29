@@ -1,6 +1,8 @@
 import time
 import os
 import json
+import requests
+import base64
 from typing import Dict
 from faster_whisper import WhisperModel
 from cog import BasePredictor, ConcatenateIterator, Input, Path
@@ -12,7 +14,8 @@ class Predictor(BasePredictor):
         self.model = WhisperModel(
             model_name,
             device="cuda",
-            compute_type="float16")
+            compute_type="float16"
+        )
 
     def predict(
         self,
