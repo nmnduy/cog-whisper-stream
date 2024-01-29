@@ -20,11 +20,11 @@ class Predictor(BasePredictor):
     def predict(
         self,
         file_url: str = Input(description="URL of the wav file to predict on", default=None),
-        file_string: str = Input(description="Base64 encoded string of the wav data to predict on", default=None),
+        wav_b64: str = Input(description="Base64 encoded string of the wav data to predict on", default=None),
     ) -> ConcatenateIterator[str]:
 
-        if file_url is None and file_string is None:
-            raise ValueError("Either file_url or file_string must be provided")
+        if file_url is None and wav_b64 is None:
+            raise ValueError("Either file_url or wav_b64 must be provided")
 
         temp_audio_filename = f"temp-{time.time_ns()}.wav"
 
@@ -32,8 +32,8 @@ class Predictor(BasePredictor):
             response = requests.get(file_url)
             with open(temp_audio_filename, 'wb') as file:
                 file.write(response.content)
-        elif file_string:
-            wav_data = base64.b64decode(file_string)
+        elif wav_b64:
+            wav_data = base64.b64decode(wav_b64)
             with open(temp_audio_filename, 'wb') as file:
                 file.write(wav_data)
 
