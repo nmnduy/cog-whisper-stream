@@ -21,7 +21,7 @@ class Predictor(BasePredictor):
         self,
         file_url: str = Input(description="URL of the wav file to predict on", default=None),
         wav_b64: str = Input(description="Base64 encoded string of the wav data to predict on", default=None),
-    ) -> ConcatenateIterator[Dict]:
+    ) -> ConcatenateIterator[str]:
 
         if file_url is None and wav_b64 is None:
             raise ValueError("Either file_url or wav_b64 must be provided")
@@ -42,8 +42,8 @@ class Predictor(BasePredictor):
         options = dict(vad_filter=True)
         segments, transcript_info = self.model.transcribe(temp_audio_filename, **options)
         for s in segments:
-            yield dict(start=s.start, end=s.end, text=s.text, done=False)
+            yield json.dumps(dict(start=s.start, end=s.end, text=s.text, done=False))
 
-        yield dict(start=0, end=0, text="", done=True)
+        yield json.dumps(dict(start=0, end=0, text="", done=True))
         # Delete temp file
         os.remove(temp_audio_filename)
